@@ -1,13 +1,11 @@
 services:
   - name: backend-service
     type: web
-    env: node # Change this to "python", "go", or another runtime if not using Node.js
-    plan: free # Use the free plan (adjust to "starter" or higher if needed)
-    buildCommand: npm install
-    startCommand: npm start
+    env: node # Specify the runtime environment, e.g., "node" for Node.js
+    plan: free # Use the free tier plan for deployment
+    buildCommand: npm install # Command to install dependencies
+    startCommand: npm start # Command to start your application
     envVars:
       - key: PORT
-        value: 3000 # Render automatically sets the PORT environment variable
-    regions:
-      - oregon # Change based on your preferred region (e.g., frankfurt)
-    healthCheckPath: /health # Optional health check endpoint
+        value: 3000 # Render automatically sets the PORT variable
+    healthCheckPath: /health # Optional: Specify your health check endpoint
