@@ -21,6 +21,11 @@ function Callback() {
     const domain = import.meta.env.VITE_COGNITO_DOMAIN;
     const clientId = import.meta.env.VITE_COGNITO_CLIENT_ID;
     const redirectUri = import.meta.env.VITE_COGNITO_REDIRECT_URI;
+console.log('Cognito Domain:', domain);
+console.log('Client ID:', clientId);
+console.log('Redirect URI:', redirectUri);
+console.log('Client Secret:', import.meta.env.VITE_COGNITO_CLIENT_SECRET);
+
 
     const tokenUrl = `${domain}/oauth2/token`;
     console.log( 'tokenUrl:', tokenUrl );
