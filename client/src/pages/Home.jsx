@@ -19,7 +19,7 @@ const Home = () => {
                 {ownerId ? (
                             <div className = "list">  <a href = "/logout">Logout</a></div>
                 ) : (
-                    <div className = "list">  <a href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login?client_id=14k24a6kquof4pvr3iph8g7u5q&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fbackend-service-kimj.onrender.com%2Fcallback">Login</a></div>
+                    <div className = "list">  <a href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login?client_id=14k24a6kquof4pvr3iph8g7u5q&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fnotonmybingosheet.onrender.com%2Fcallback">Login</a></div>
                 )}
                 </div>
             </div>

@@ -397,7 +397,7 @@ function EditSheet() {
       <div className="list">
         {/* NOTE: If you deploy your app, update your Cognito redirect_uri accordingly */}
         <a
-          href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login/continue?client_id=14k24a6kquof4pvr3iph8g7u5q&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fcallback&response_type=code&scope=email+openid+phone"
+          href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login?client_id=14k24a6kquof4pvr3iph8g7u5q&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fnotonmybingosheet.onrender.com%2Fcallback"
         >
           Login
         </a>
