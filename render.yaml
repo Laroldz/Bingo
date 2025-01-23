@@ -1,11 +1,19 @@
 services:
   - name: backend-service
     type: web
-    env: node # Specify the runtime environment, e.g., "node" for Node.js
-    plan: free # Use the free tier plan for deployment
-    buildCommand: npm install # Command to install dependencies
-    startCommand: npm start # Command to start your application
+    env: node
+    plan: free
+    buildCommand: |
+      cd backend-service
+      npm install
+      cd ../frontend-service
+      npm install
+      npm run build
+      cd ..
+    startCommand: |
+      cd backend-service
+      npm start
     envVars:
       - key: PORT
-        value: 3000 # Render automatically sets the PORT variable
-    healthCheckPath: /health # Optional: Specify your health check endpoint
+        value: 3000
+    healthCheckPath: /health
