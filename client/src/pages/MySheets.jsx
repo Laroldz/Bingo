@@ -1,4 +1,3 @@
-// src/components/MySheets.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +12,9 @@ function MySheets() {
   useEffect(() => {
     const fetchSheets = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/mysheets/${ownerId}`);
+        // Use a *relative path* since the backend is served on the same domain
+        // "/mysheets" automatically resolves to https://<your-deployed-domain>/mysheets
+        const response = await axios.get(`/mysheets/${ownerId}`);
         setSheets(response.data);
       } catch (error) {
         console.error('Error fetching sheets:', error);
@@ -49,10 +50,10 @@ function MySheets() {
         return;
       }
 
-      await axios.delete(`http://localhost:3000/sheets/${sheetId}`);
+      // Again, use a *relative path* for the delete request
+      await axios.delete(`/sheets/${sheetId}`);
 
       alert('Sheet deleted successfully!');
-
       sessionStorage.removeItem('sheetId');
       setSheets((prev) => prev.filter((sheet) => sheet.id !== sheetId));
     } catch (error) {
@@ -73,7 +74,8 @@ function MySheets() {
             <div className="list"><a href="/logout">Logout</a></div>
           ) : (
             <div className="list">
-              <a href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login/continue?client_id=14k24a6kquof4pvr3iph8g7u5q&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fcallback&response_type=code&scope=email+openid+phone">
+              {/* TODO: Update your Cognito login URL for production */}
+              <a href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login?client_id=14k24a6kquof4pvr3iph8g7u5q&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fbackend-service-kimj.onrender.com%2Fcallback">
                 Login
               </a>
             </div>

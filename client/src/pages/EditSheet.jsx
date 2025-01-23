@@ -21,7 +21,7 @@ function EditSheet() {
     title: '',
     description: '',
     hasFreeSpace: false,
-    share_token: '',   // <--- new
+    share_token: '',
     created_at: null,
     updated_at: null,
   });
@@ -64,7 +64,8 @@ function EditSheet() {
     async function fetchSheet() {
       try {
         if (existingSheetId) {
-          const response = await axios.get(`http://localhost:3000/sheets/${existingSheetId}`);
+          // Use a relative path, e.g. /sheets/:id
+          const response = await axios.get(`/sheets/${existingSheetId}`);
           const { sheet: loadedSheet, items: loadedItems } = response.data;
 
           // Update local sheet state
@@ -73,7 +74,7 @@ function EditSheet() {
             title: loadedSheet.title || '',
             description: loadedSheet.description || '',
             hasFreeSpace: Boolean(loadedSheet.has_free_space),
-            share_token: loadedSheet.share_token || '',   // <--- capture existing token
+            share_token: loadedSheet.share_token || '',
             created_at: loadedSheet.created_at,
             updated_at: loadedSheet.updated_at,
           });
@@ -92,7 +93,6 @@ function EditSheet() {
           while (finalItems.length < 25) {
             finalItems.push({ content: '', is_marked: false });
           }
-
           setItems(finalItems.slice(0, 25));
         }
       } catch (error) {
@@ -227,7 +227,8 @@ function EditSheet() {
       if (!sheet.id) {
         console.log('Creating new sheet:', sheet);
 
-        const response = await axios.post('http://localhost:3000/sheets', {
+        // POST to /sheets
+        const response = await axios.post('/sheets', {
           owner_id: ownerId,
           owner_username: username,
           title: sheet.title,
@@ -252,15 +253,13 @@ function EditSheet() {
       } else {
         console.log('Updating sheet id:', sheet.id);
 
-        const updateResponse = await axios.put(
-          `http://localhost:3000/sheets/${sheet.id}`,
-          {
-            title: sheet.title,
-            description: sheet.description,
-            hasFreeSpace: sheet.hasFreeSpace,
-            items,
-          }
-        );
+        // PUT /sheets/:id
+        const updateResponse = await axios.put(`/sheets/${sheet.id}`, {
+          title: sheet.title,
+          description: sheet.description,
+          hasFreeSpace: sheet.hasFreeSpace,
+          items,
+        });
 
         const { sheet: updatedSheet, items: updatedItems } = updateResponse.data;
         console.log('Updated sheet:', updatedSheet);
@@ -290,7 +289,7 @@ function EditSheet() {
         return;
       }
 
-      // If the sheet already has a share_token, just show the existing token
+      // If the sheet already has a share_token, just show it
       if (sheet.share_token) {
         setActiveShareToken(sheet.share_token);
         setShareModalVisible(true);
@@ -300,10 +299,10 @@ function EditSheet() {
       // Otherwise, generate a random share token
       const token = Math.random().toString(36).substring(2, 10);
 
-      const response = await axios.post(
-        `http://localhost:3000/sheets/${sheet.id}/share`,
-        { shareToken: token }
-      );
+      // POST /sheets/:id/share
+      const response = await axios.post(`/sheets/${sheet.id}/share`, {
+        shareToken: token,
+      });
 
       const { sheet: updatedSheet } = response.data;
 
@@ -339,263 +338,9 @@ function EditSheet() {
         return;
       }
 
-      await axios.delete(`http://localhost:3000/sheets/${sheet.id}`);
+      await axios.delete(`/sheets/${sheet.id}`);
 
       alert('Sheet deleted successfully!');
 
       // Clear local state + remove sheetId from session
-      sessionStorage.removeItem('sheetId');
-      setSheet({
-        id: null,
-        title: '',
-        description: '',
-        hasFreeSpace: false,
-        share_token: '',
-        created_at: null,
-        updated_at: null,
-      });
-      setItems(Array.from({ length: 25 }, () => ({ content: '', is_marked: false })));
-
-      // Redirect to My Sheets
-      navigate('/mysheets');
-    } catch (error) {
-      console.error('Error deleting sheet:', error);
-      alert('Error deleting sheet. Check console for details.');
-    }
-  }
-
-  //------------------------------------------------------------------
-  // Debug Info
-  //------------------------------------------------------------------
-  const debugInfo = {
-    ownerId,
-    username,
-    sheet,
-    items,
-    sheetId: sessionStorage.getItem('sheetId'),
-  };
-
-  //------------------------------------------------------------------
-  // Build some UI variables for simpler JSX
-  //------------------------------------------------------------------
-  let freeSpaceButtonLabel = 'Include FREE SPACE';
-  let freeSpaceButtonClassName = 'action-button';
-  if (sheet.hasFreeSpace) {
-    freeSpaceButtonLabel = 'Remove FREE SPACE';
-    freeSpaceButtonClassName = 'action-button active';
-  }
-
-  // Navbar login/logout link
-  let navLink;
-  if (ownerId) {
-    navLink = (
-      <div className="list">
-        <a href="/logout">Logout</a>
-      </div>
-    );
-  } else {
-    navLink = (
-      <div className="list">
-        <a
-          href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login/continue?client_id=14k24a6kquof4pvr3iph8g7u5q&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fcallback&response_type=code&scope=email+openid+phone"
-        >
-          Login
-        </a>
-      </div>
-    );
-  }
-
-  // If this sheet already exists (has an ID), we disable editing the text
-  const isExistingSheet = Boolean(sheet.id);
-
-  // Simple date/time formatter
-  function formatTimestamp(ts) {
-    if (!ts) return '';
-    const date = new Date(ts);
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    };
-    return date.toLocaleDateString(undefined, options);
-  }
-
-  //------------------------------------------------------------------
-  // SHARE MODAL: show if shareModalVisible is true
-  //------------------------------------------------------------------
-  function closeShareModal() {
-    setShareModalVisible(false);
-  }
-
-  let shareModal = null;
-  if (shareModalVisible) {
-    // We either have the existing share_token or a newly generated one in activeShareToken
-    const shareLink = `http://localhost:5173/share?shareToken=${activeShareToken}`;
-    shareModal = (
-      <div className="modal-overlay">
-        <div className="modal-content">
-          <h2>Your Share Token</h2>
-          <p>Use the link below to share this sheet:</p>
-          <div className="share-link">
-            <a href={shareLink} target="_blank" rel="noreferrer">
-              {shareLink}
-            </a>
-          </div>
-          <button onClick={closeShareModal} className="close-button">
-            Close
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="container">
-      <h1>Bingo Sheet Editor</h1>
-
-      {/* Navbar */}
-      <div className="navbar">
-        <div className="links">
-          <div className="list">
-            <a href="/">Home</a>
-          </div>
-          <div className="list">
-            <a href="/about">About</a>
-          </div>
-          <div className="list">
-            <a href="/mysheets">My Sheets</a>
-          </div>
-          {navLink}
-        </div>
-      </div>
-
-      {/* Created At Display */}
-      <div className="createdAt">
-        Created At: {formatTimestamp(sheet.created_at)}
-      </div>
-
-      <div className="editor-container">
-        {/* LEFT PANEL */}
-        <div className="left-panel">
-          <div className="field">
-            <label>Title:</label>
-            <input
-              type="text"
-              value={sheet.title}
-              onChange={(e) => handleSheetChange('title', e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label>Description:</label>
-            <textarea
-              value={sheet.description}
-              onChange={(e) => handleSheetChange('description', e.target.value)}
-            />
-          </div>
-
-          <div className="action-buttons">
-            <button
-              className={freeSpaceButtonClassName}
-              onClick={handleFreeSpaceToggle}
-            >
-              {freeSpaceButtonLabel}
-            </button>
-
-            <button
-              className="action-button"
-              onClick={shuffleNonFreeSpaceItems}
-            >
-              Randomize Squares
-            </button>
-          </div>
-
-          <div className="button-group">
-            <button onClick={handleSave} className="save-button">
-              Save Changes
-            </button>
-            <button onClick={() => navigate('/mysheets')} className="back-button">
-              Back to My Sheets
-            </button>
-          </div>
-          
-
-          {isExistingSheet && (
-            <div className="button-group">
-              <button onClick={handleShare} className="share-button">
-                Share Sheet
-              </button>
-              <button onClick={handleDelete} className="share-button">
-                Delete Sheet
-              </button>
-            </div>
-          )}
-                {/* Share Modal (conditionally rendered) */}
-      {shareModal}
-        </div>
-
-        {/* RIGHT PANEL: 5×5 Bingo Grid */}
-        <div className="right-panel">
-          <h3>Bingo Items</h3>
-          <div className="grid">
-            {items.map((item, index) => {
-              let cellClassName = 'grid-cell';
-              const lowerContent = item.content.toLowerCase();
-              const isFreeSpace = (lowerContent === 'free space');
-
-              if (isFreeSpace) {
-                cellClassName += ' free-space';
-              }
-              if (item.is_marked) {
-                cellClassName += ' marked';
-              }
-
-              return (
-                <div key={index} className={cellClassName}>
-                  <textarea
-                    value={item.content}
-                    onChange={(e) => handleItemChange(e, index)}
-                    disabled={isFreeSpace || isExistingSheet}
-                  />
-                  <div className="mark-toggle">
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={item.is_marked}
-                        onChange={() => handleToggleMark(index)}
-                        disabled={isFreeSpace}
-                      />
-                      Mark
-                    </label>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Debug Button */}
-
-      {/* Debug Modal */}
-      {showDebug && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Debug Information</h2>
-            <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
-            <button onClick={toggleDebug} className="close-button">
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-
-    </div>
-  );
-}
-
-export default EditSheet;
+      sessionStorage.removeItem('sheetId')

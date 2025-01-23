@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './EditSheet.css'; // or create your own ViewSheet.css
+import './EditSheet.css'; // or your own ViewSheet.css
 
 function ViewSheet() {
   const navigate = useNavigate();
@@ -37,8 +37,6 @@ function ViewSheet() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log('shareToken:', shareToken, 'sheet:', sheet, 'items:', items);
-
   //------------------------------------------------------------------
   // On mount, if shareToken exists, fetch the shared sheet
   //------------------------------------------------------------------
@@ -51,8 +49,9 @@ function ViewSheet() {
           return;
         }
 
-        // GET /share/:share_token
-        const response = await axios.get(`http://localhost:3000/share/${shareToken}`);
+        // Use a relative path instead of http://localhost:3000
+        // This will automatically call <your-deployed-domain>/share/:shareToken
+        const response = await axios.get(`/share/${shareToken}`);
 
         const { sheet: loadedSheet, items: loadedItems } = response.data;
 
@@ -77,7 +76,7 @@ function ViewSheet() {
             is_marked: Boolean(dbItem.is_marked),
           });
         }
-        // If fewer than 25, pad; if more, slice
+        // If fewer than 25 items, pad it; if more, slice
         while (finalItems.length < 25) {
           finalItems.push({ content: '', is_marked: false });
         }
@@ -164,7 +163,7 @@ function ViewSheet() {
           if (item.content.toLowerCase() === 'free space') {
             cellClass += ' free-space';
           }
-          // If is_marked = true, add 'marked' class to turn it green
+          // If is_marked = true, add 'marked' class to highlight it
           if (item.is_marked) {
             cellClass += ' marked';
           }
