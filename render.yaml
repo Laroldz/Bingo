@@ -4,14 +4,14 @@ services:
     env: node
     plan: free
     buildCommand: |
-      cd backend-service
+      cd server
       npm install
-      cd ../frontend-service
+      cd ../client
       npm install
       npm run build
       cd ..
     startCommand: |
-      cd backend-service
+      cd server
       npm start
     envVars:
       - key: PORT
