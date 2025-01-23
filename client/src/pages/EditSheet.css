@@ -1,0 +1,174 @@
+/* Container for the entire editor */
+.container {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+  }
+  .navbar {
+    overflow: hidden;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    outline: 1px solid black;
+    outline-offset: -10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+}
+  
+  /* Flex container for left and right panels */
+  .editor-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  
+  /* Left panel styling */
+  .left-panel {
+    width: 300px;
+  }
+  
+  /* Styling for each field (Title, Description) */
+  .field {
+    margin-bottom: 15px;
+  }
+  
+  .field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  /* Action buttons container */
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Common styling for action buttons */
+  .action-button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    flex: 1;
+  }
+  
+  .action-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .action-button.active {
+    background-color: #28a745; /* Green when active */
+  }
+  
+  .action-button.active:hover {
+    background-color: #1e7e34;
+  }
+  
+  /* Save and Back buttons container */
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Styling for Save and Back buttons */
+  .save-button {
+    padding: 10px 15px;
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    flex: 1;
+  }
+  
+  .save-button:hover {
+    background-color: #218838;
+  }
+  
+  .back-button {
+    padding: 10px 15px;
+    background-color: #6c757d; /* Gray */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    flex: 1;
+  }
+  
+  .back-button:hover {
+    background-color: #5a6268;
+  }
+  
+  /* Right panel styling */
+  .right-panel {
+    flex: 1;
+  }
+  
+  .right-panel h3 {
+    margin-bottom: 10px;
+  }
+  
+  /* Grid container */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+  }
+  
+  /* Each cell in the grid */
+  .grid-cell {
+    border: 1px solid #ccc;
+    padding: 5px;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 4px;
+  }
+  
+  /* Styling for textareas inside grid cells */
+  .grid-cell textarea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    font-size: 14px;
+    
+    /* Let text wrap if it overflows horizontally */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* Styling for FREE SPACE cell */
+  .grid-cell.free-space {
+    background-color: #eeeeee;
+    font-weight: bold;
+  }
+  .createdAt{
+    font-weight:bold;
+    margin-bottom: 3vh;
+  }
+  .marked {
+    background-color: lightgreen; /* or any green shade */
+  }
+  

@@ -1,0 +1,154 @@
+/* MySheets.css */
+
+/* ----- Container & Global Styles ----- */
+.mysheets-container {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f5f5f5; /* Light background for contrast */
+  }
+  
+  .navbar {
+    overflow: hidden;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    outline: 1px solid black;
+    outline-offset: -10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+}
+  
+  .links {
+    margin-left: auto;
+    margin-right: 20px;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .list {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px;
+    transition: background-color 0.2s ease;
+    border-radius: 5px;
+  }
+  
+  .list a {
+    color: inherit; /* Inherit the text color (no default link style) */
+    text-decoration: none;
+  }
+  
+  .list:hover {
+    background-color: #eee;
+  }
+  
+  /* ----- Page Title ----- */
+  .mysheets-title {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+    font-size: 2rem;
+  }
+  
+  /* ----- "No Sheets" Paragraph ----- */
+  .no-sheets {
+    text-align: center;
+    color: #777;
+    margin-top: 40px;
+    font-size: 1.1rem;
+  }
+  
+  /* ----- Sheets List ----- */
+  .sheets-list {
+    list-style-type: none;
+    padding: 0;
+    max-width: 1200px;
+    margin: 30px auto; /* Center the list container */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  /* ----- Sheet Card ----- */
+  .sheet-card {
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    transition: box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .sheet-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Title & Description */
+  .sheet-card-title {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.25rem;
+  }
+  
+  .sheet-card-description {
+    margin: 0 0 15px 0;
+    color: #555;
+    font-size: 0.95rem;
+  }
+  
+  /* Action Buttons */
+  .sheet-card-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .edit-button, .delete-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .edit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .delete-button {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .delete-button:hover {
+    background-color: #c82333;
+  }
+  
+  /* ----- New Sheet Button ----- */
+  .new-sheet-button {
+    display: block;
+    margin: 0 auto 40px auto;
+    padding: 12px 20px;
+    background-color: #28a745;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .new-sheet-button:hover {
+    background-color: #218838;
+  }
+  
