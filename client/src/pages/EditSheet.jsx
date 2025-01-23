@@ -79,7 +79,7 @@ function EditSheet() {
             updated_at: loadedSheet.updated_at,
           });
 
-          // Convert DB items to the shape { content, is_marked }
+          // Convert DB items to { content, is_marked }
           const finalItems = [];
           for (let i = 0; i < loadedItems.length; i++) {
             const dbItem = loadedItems[i];
@@ -104,14 +104,12 @@ function EditSheet() {
   }, [existingSheetId]);
 
   //------------------------------------------------------------------
-  // Toggle hasFreeSpace and transform items accordingly
+  // hasFreeSpace toggling logic (transformBingoItems)
   //------------------------------------------------------------------
   function transformBingoItems(rawItems, hasFreeSpace = false) {
     // 1) Remove any "FREE SPACE"
     let cleanedItems = rawItems.filter((item) => {
-      if (!item.content) {
-        return true;
-      }
+      if (!item.content) return true;
       return item.content.toLowerCase() !== 'free space';
     });
 
@@ -251,11 +249,11 @@ function EditSheet() {
 
         sessionStorage.setItem('sheetId', newSheet.id);
       } else {
-        // If you truly want to block any updates once it has an ID,
-        // you can simply return early here, or remove this "update" code.
-        // But if you want "Save Changes" for an existing sheet, keep it:
         console.log('Updating sheet id:', sheet.id);
 
+        // PUT /sheets/:id
+        // Even if isLocked is true for the *words*, we might still want to update the "is_marked" states.
+        // So this PUT is still relevant if you want to save marking changes.
         const updateResponse = await axios.put(`/sheets/${sheet.id}`, {
           title: sheet.title,
           description: sheet.description,
@@ -379,7 +377,7 @@ function EditSheet() {
   //------------------------------------------------------------------
   // Build some UI variables for simpler JSX
   //------------------------------------------------------------------
-  // If the sheet *has* an ID, treat it as locked (no further edits):
+  // If sheet.id is truthy, treat as locked for word changes
   const isLocked = Boolean(sheet.id);
 
   let freeSpaceButtonLabel = 'Include FREE SPACE';
@@ -479,7 +477,7 @@ function EditSheet() {
 
       {/* Created At Display */}
       <div className="createdAt">
-        Created At: {formatTimestamp(sheet.created_at)}
+        Created At: {formatTimestamp(sheet.created_at)} by user {username}
       </div>
 
       <div className="editor-container">
@@ -523,11 +521,8 @@ function EditSheet() {
           </div>
 
           <div className="button-group">
-            <button
-              onClick={handleSave}
-              className="save-button"
-              disabled={isLocked}
-            >
+            {/* We do NOT disable "Save Changes" because we might want to save new markings */}
+            <button onClick={handleSave} className="save-button">
               Save Changes
             </button>
             <button onClick={() => navigate('/mysheets')} className="back-button">
@@ -568,18 +563,20 @@ function EditSheet() {
 
               return (
                 <div key={index} className={cellClassName}>
+                  {/* Disable editing the text if locked or if it's the FREE SPACE */}
                   <textarea
                     value={item.content}
                     onChange={(e) => handleItemChange(e, index)}
-                    disabled={isFreeSpace || isLocked /* disable editing if FREE SPACE or locked */}
+                    disabled={isFreeSpace || isLocked}
                   />
                   <div className="mark-toggle">
                     <label>
+                      {/* Allow marking even if locked (only FREE SPACE remains disabled) */}
                       <input
                         type="checkbox"
                         checked={item.is_marked}
                         onChange={() => handleToggleMark(index)}
-                        disabled={isFreeSpace || isLocked /* disable marking if FREE SPACE or locked */}
+                        disabled={isFreeSpace}
                       />
                       Mark
                     </label>
