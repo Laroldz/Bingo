@@ -25,7 +25,7 @@ const Home = () => {
             </div>
         <div className = "background">
         <div className = "firstparagraph"><div>
-            Welcome to my Bingo Creation App!! Click "Login" to create a sheet and share it with your friends or click "About" to see more about this project! You can also check out my personal website <a href = "https://lawrencewongg.net" target='_blank'> Here </a></div>
+            Welcome to my Bingo Creation App! Click "Login" to create a sheet and share it with your friends or click "About" to see more about this project! Please wait a moment for render to start up, but you can also check out my personal website <a href = "https://lawrencewongg.net" target='_blank'> Here </a></div>
         </div>
         </div>
 
