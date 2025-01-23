@@ -27,7 +27,7 @@ function EditSheet() {
   });
 
   // Local state for 25 Bingo cells
-  // Each item has { content: string, is_marked: boolean }
+  // Each item is { content: string, is_marked: boolean }
   const [items, setItems] = useState(() => {
     const blankItems = [];
     for (let i = 0; i < 25; i++) {
@@ -251,9 +251,11 @@ function EditSheet() {
 
         sessionStorage.setItem('sheetId', newSheet.id);
       } else {
+        // If you truly want to block any updates once it has an ID,
+        // you can simply return early here, or remove this "update" code.
+        // But if you want "Save Changes" for an existing sheet, keep it:
         console.log('Updating sheet id:', sheet.id);
 
-        // PUT /sheets/:id
         const updateResponse = await axios.put(`/sheets/${sheet.id}`, {
           title: sheet.title,
           description: sheet.description,
@@ -280,7 +282,7 @@ function EditSheet() {
   }
 
   //------------------------------------------------------------------
-  // SHARE the sheet (auto-generate random token) or show existing
+  // SHARE the sheet
   //------------------------------------------------------------------
   async function handleShare() {
     try {
@@ -377,6 +379,9 @@ function EditSheet() {
   //------------------------------------------------------------------
   // Build some UI variables for simpler JSX
   //------------------------------------------------------------------
+  // If the sheet *has* an ID, treat it as locked (no further edits):
+  const isLocked = Boolean(sheet.id);
+
   let freeSpaceButtonLabel = 'Include FREE SPACE';
   let freeSpaceButtonClassName = 'action-button';
   if (sheet.hasFreeSpace) {
@@ -395,7 +400,6 @@ function EditSheet() {
   } else {
     navLink = (
       <div className="list">
-        {/* NOTE: If you deploy your app, update your Cognito redirect_uri accordingly */}
         <a
           href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login?client_id=14k24a6kquof4pvr3iph8g7u5q&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fnotonmybingosheet.onrender.com%2Fcallback"
         >
@@ -487,6 +491,7 @@ function EditSheet() {
               type="text"
               value={sheet.title}
               onChange={(e) => handleSheetChange('title', e.target.value)}
+              disabled={isLocked}
             />
           </div>
 
@@ -495,6 +500,7 @@ function EditSheet() {
             <textarea
               value={sheet.description}
               onChange={(e) => handleSheetChange('description', e.target.value)}
+              disabled={isLocked}
             />
           </div>
 
@@ -502,6 +508,7 @@ function EditSheet() {
             <button
               className={freeSpaceButtonClassName}
               onClick={handleFreeSpaceToggle}
+              disabled={isLocked}
             >
               {freeSpaceButtonLabel}
             </button>
@@ -509,13 +516,18 @@ function EditSheet() {
             <button
               className="action-button"
               onClick={shuffleNonFreeSpaceItems}
+              disabled={isLocked}
             >
               Randomize Squares
             </button>
           </div>
 
           <div className="button-group">
-            <button onClick={handleSave} className="save-button">
+            <button
+              onClick={handleSave}
+              className="save-button"
+              disabled={isLocked}
+            >
               Save Changes
             </button>
             <button onClick={() => navigate('/mysheets')} className="back-button">
@@ -559,7 +571,7 @@ function EditSheet() {
                   <textarea
                     value={item.content}
                     onChange={(e) => handleItemChange(e, index)}
-                    disabled={isFreeSpace /* disable editing free space */}
+                    disabled={isFreeSpace || isLocked /* disable editing if FREE SPACE or locked */}
                   />
                   <div className="mark-toggle">
                     <label>
@@ -567,7 +579,7 @@ function EditSheet() {
                         type="checkbox"
                         checked={item.is_marked}
                         onChange={() => handleToggleMark(index)}
-                        disabled={isFreeSpace}
+                        disabled={isFreeSpace || isLocked /* disable marking if FREE SPACE or locked */}
                       />
                       Mark
                     </label>
