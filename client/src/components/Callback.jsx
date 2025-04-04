@@ -27,7 +27,7 @@ console.log('Redirect URI:', redirectUri);
 console.log('Client Secret:', import.meta.env.VITE_COGNITO_CLIENT_SECRET);
 
 
-    const tokenUrl = `${domain}oauth2/token`;
+    const tokenUrl = `${domain.replace(/\/+$/, '')}/oauth2/token`;
     console.log( 'tokenUrl:', tokenUrl );
     const data = new URLSearchParams({
       grant_type: 'authorization_code',
