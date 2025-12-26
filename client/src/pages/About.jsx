@@ -16,7 +16,7 @@ const About = () => {
         {ownerId ? (
             <div className = "list">  <a href = "/logout">Logout</a></div>
         ) : (
-        <div className = "list">  <a href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login/continue?client_id=14k24a6kquof4pvr3iph8g7u5q&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fcallback&response_type=code&scope=email+openid+phone">Login</a></div>
+        <div className = "list">  <a href="https://us-east-21winqvkkq.auth.us-east-2.amazoncognito.com/login?client_id=5a0k6f5kn0l6hvo04hm7sjec66&redirect_uri=https://notonmybingosheet.onrender.com/callback&response_type=code&scope=email+openid+phone">Login</a></div>
     )}
 </div>
                 </div>
