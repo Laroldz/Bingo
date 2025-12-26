@@ -34,7 +34,7 @@ console.log('Redirect URI:', redirectUri);
       redirect_uri: redirectUri,
       client_secret: import.meta.env.VITE_COGNITO_CLIENT_SECRET,
     });
-    console.log('data', data)
+    console.log('data', data);
 
     axios.post(tokenUrl, data, {headers: { 'Content-Type': 'application/x-www-form-urlencoded' },}).then((res) => {
         // 3. res.data contains { id_token, access_token, refresh_token, expires_in, token_type }
