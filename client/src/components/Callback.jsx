@@ -61,7 +61,10 @@ console.log('Redirect URI:', redirectUri);
       })
       
       .catch((err) => {
+        console.log('Status:', err.response.status);
+  console.log('Cognito error:', err.response.data);
         console.error('Error exchanging code for tokens:', err);
+        
         //navigate('/fasdfs');
       });
   }, [navigate]);
