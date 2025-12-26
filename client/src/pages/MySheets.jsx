@@ -75,7 +75,7 @@ function MySheets() {
           ) : (
             <div className="list">
               {/* TODO: Update your Cognito login URL for production */}
-              <a href="https://us-east-2fzo87xm4b.auth.us-east-2.amazoncognito.com/login?client_id=14k24a6kquof4pvr3iph8g7u5q&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fnotonmybingosheet.onrender.com%2Fcallback">
+              <a href="https://us-east-21winqvkkq.auth.us-east-2.amazoncognito.com/login?client_id=5a0k6f5kn0l6hvo04hm7sjec66&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fnotonmybingosheet.onrender.com%2Fcallback">
                 Login
               </a>
             </div>
