@@ -24,7 +24,7 @@ function Callback() {
 console.log('Cognito Domain:', domain);
 console.log('Client ID:', clientId);
 console.log('Redirect URI:', redirectUri);
-
+console.log('Code:',code);
     const tokenUrl = `${domain.replace(/\/+$/, '')}/oauth2/token`;
     console.log( 'tokenUrl:', tokenUrl );
     const data = new URLSearchParams({
