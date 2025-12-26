@@ -24,8 +24,6 @@ function Callback() {
 console.log('Cognito Domain:', domain);
 console.log('Client ID:', clientId);
 console.log('Redirect URI:', redirectUri);
-console.log('Client Secret:', import.meta.env.VITE_COGNITO_CLIENT_SECRET);
-
 
     const tokenUrl = `${domain.replace(/\/+$/, '')}/oauth2/token`;
     console.log( 'tokenUrl:', tokenUrl );
@@ -36,6 +34,7 @@ console.log('Client Secret:', import.meta.env.VITE_COGNITO_CLIENT_SECRET);
       redirect_uri: redirectUri,
       client_secret: import.meta.env.VITE_COGNITO_CLIENT_SECRET,
     });
+    console.log('data', data)
 
     axios.post(tokenUrl, data, {headers: { 'Content-Type': 'application/x-www-form-urlencoded' },}).then((res) => {
         // 3. res.data contains { id_token, access_token, refresh_token, expires_in, token_type }
